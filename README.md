@@ -10,6 +10,10 @@ EX:
 ```1 0 * * * tail -1 /home/erick/python/ta/hourly-prices.csv >> /home/erick/python/ta/daily-prices.csv ```
 
 ```1 0 * * SUN tail -1 /home/erick/python/ta/daily-prices.csv >> /home/erick/python/ta/weekly-prices.csv ```
+Also there is a four hour tick as well, much of this code can be called to use the four hour prices. Here is the example line for CRON
+
+```1 0,4,8,12,16,20 * * * tail -1 /home/erick/python/ta/hourly-prices.csv >> /home/erick/python/ta/four-hour-prices.csv```
+
 
 When there is enough data the code will run by using the *-prices.csv files
 For example buy-zone.py will use weekly only, others will use other timeframes and options.
