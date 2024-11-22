@@ -106,8 +106,9 @@ def data_fib_stats(daily_data):
         min_price = min(daily_data['Close'])
         max_price = max(daily_data['Close'])
 
+        # Kind of a patch to make sure this does not fail.
         if min_price == 0: # Prevent div/0
-                raise Exception("Zero min price, most likely reaching back to far in data,getting zero padding.")
+                min_price = 1e-10 
 
         print("\nHigh to Low Spread",spread,"Ratio of High/Low",round(max_price/min_price,2))
         print("\n Pivot points across",timeframe,"days. Plus Multiples of the mean price.")

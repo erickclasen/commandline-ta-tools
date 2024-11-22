@@ -6,7 +6,7 @@ def find_outliers(asset, file_time_format):
     # Map asset names to CSV column indexes based on your format
     asset_columns = {
         'BTC': 1, 'DOGE': 2, 'ETH': 3, 'FET': 4, 'ICP': 5,
-        'LTC': 6, 'QNT': 7, 'SOL': 8, 'GRT': 9
+        'LTC': 6, 'QNT': 7, 'RNDR': 8, 'SOL': 9, 'GRT': 10
     }
 
     # Ensure valid asset and file format inputs
@@ -22,7 +22,7 @@ def find_outliers(asset, file_time_format):
         with open(filename, 'r') as file:
             reader = csv.reader(file)
             data = list(reader)
-    except FileNotFoundError:
+    except IOError:
         print("Error: File '{0}' not found.".format(filename))
         sys.exit(1)
 
@@ -48,8 +48,16 @@ def find_outliers(asset, file_time_format):
             timestamp = timestamps[i + 1]  # Timestamp of current price
             previous_price = prices[i]     # Previous price
             current_price = prices[i + 1]  # Current price
+
+            # Prevent division by zero
+            if previous_price == 0:
+                print("Warning: Previous price is 0 at timestamp %s. Skipping calculation." % timestamp)
+                continue
+
             percent_change = (delta / previous_price) * 100  # Percent change from previous price
-            print("{0}: Price = {1:.5f}, Price Change = {2:.5f}, (Change: {3:.5f}%)".format(timestamp, current_price, delta, percent_change))
+
+            print("{0}: Price = {1:.5f}, Price Change = {2:.5f}, (Change: {3:.5f}%)".format(
+                timestamp, current_price, delta, percent_change))
     else:
         print("No outliers found in price changes for {0} in {1} file.".format(asset, file_time_format))
 
@@ -62,4 +70,3 @@ if __name__ == "__main__":
     file_time_format = sys.argv[2].lower()  # Time format (e.g., hourly, four-hour, daily, weekly)
 
     find_outliers(asset, file_time_format)
-

@@ -21,11 +21,6 @@ import warnings
 warnings.filterwarnings("ignore")
 
 
-# The index scaler as calculated on 02/01/2021 via the index-scaler.py code
-index_scaler = {'BTC': 1.2948351898809769e-06, 'BCH': 0.00010715265395693321, 'ETC': 0.005779378023337128, 'ETH': 3.303819215012555e-05, 'LTC': 0.0003332689013457398, 'DAI': 0.04345870445256156, 'XLM': 0.1368368305634366, 'LINK': 0.0019502758831010096, 'ALGO': 0.06871860418771174, 'ATOM': 0.005323651386012638, 'OXT': 0.12584156546907443, 'ZEC': 0.000498396916813309, 'BAT': 0.14554708164274333, 'CVC': 0.2871046102971217, 'GLM': 0.2645354981507646, 'MANA': 0.2889746629905236, 'LOOM': 0.6658232904987016, 'CGLD': 0.015614947877303985, 'KNC': 0.03362587847607519, 'OMG': 0.012470818285212602, 'ZRX': 0.06480732296826613, 'FIL': 0.001938890438924079, 'AVAX': 0.001124421343614526}
-
-
-
 def parse_arguments():
         arguments = len(sys.argv) - 1
 
@@ -142,9 +137,9 @@ if currency == 'INDEX':
                     divisor = line[underlying] # Divide by the underlying asset
 
                 # Inner loop, do the indexing math across the values of the dictionary.
-                for key in index_scaler:
+                for key in cm.index_scaler:
                         #print(price_dict[key]*new_dict[key]) # Debug
-                        index_value += line[key]*index_scaler[key]
+                        index_value += line[key]*cm.index_scaler[key]
                 # uild a list out of the values.
                 currency_price_list.append(index_value/divisor) 
 else:

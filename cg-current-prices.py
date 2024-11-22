@@ -102,7 +102,7 @@ out_list = []
 #coins = ["bitcoin", "ethereum", "dogecoin"]
 
 # The ones that we care about sorted by alpha for starters.
-coins = ["bitcoin", "dogecoin", "ethereum", "fetch-ai", "internet-computer", "litecoin", "quant-network", "solana", "the-graph"]
+coins = ["bitcoin", "dogecoin", "ethereum", "fetch-ai", "internet-computer", "litecoin", "quant-network", "render-token", "solana", "the-graph"]
 
 print(datetime.now())
 out_list.append(datetime.now())

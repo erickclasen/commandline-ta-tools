@@ -5,6 +5,7 @@ import os
 import coretamodule as cm
 import statsmod as st
 
+
 def parse_arguments():
         arguments = len(sys.argv) - 1
 
@@ -13,7 +14,7 @@ def parse_arguments():
         elif arguments == 1:
             print("Currency: ",sys.argv[1])
             currency = sys.argv[1].upper()
-            timeframe = 100
+            timeframe = 365
             subplot = 'D'
         elif arguments == 2: # OK parse out both, filename and option
             print("Currency: ",sys.argv[1])
@@ -193,7 +194,7 @@ dp = [0,0,0,0] # Array to hold the historic values
 count = 0 # Keep a count to plot the point and print out the position.
 
 # Run through the range of price values.
-for price in y_values:
+for price in y_values[-30:]:
 
         # Make sure the historic data is populated. The find the fractals. 
         # This uses the current price and 4 historic values.
@@ -220,18 +221,38 @@ for price in y_values:
 #plt.show()
 
 
-min10 = round(min(y_values[-10:]),4)
-print("\nMin10",min10)
-print("Max60",round(max(y_values[-60:]),4))
+min365 = round(min(y_values[-365:]),4)
+print("\nMin ",min365)
+#print("Max365",
+max365 = round(max(y_values[-365:]),4)
+#for n in range(0,10):
+print("Max ",max365)
+#print("Pivot ",round((min365+max365)*0.5,4)	)
+
+
+print("\nFib Levels")
+list = [0,0.236,0.382,0.5,0.618,1,1.618]
+
+for n in list:
+        ratio = float(min365)+(float(max365)-float(min365))*n
+        print(n,"\t",ratio)
+
 # add mean of these
 
 sma5 = cm.simple_mov_avg(y_values,5)
-sma20 = cm.simple_mov_avg(y_values,20)
+sma50 = cm.simple_mov_avg(y_values,50)
 
-stddev = st.stddev(y_values[-20:])
+sma20 = cm.simple_mov_avg(y_values,200)
 
-print("\nSMA5 and SMA20:",round(sma5,4),round(sma20,4))
+stddev = st.stddev(y_values[-200:])
+
+print("\nPrice:",y_values[-1])
+print("\nSMA5:",round(sma5,4))
+
+print("\nSMA50 and SMA200:",round(sma5,4),round(sma20,4))
 print("1SD Bands:",round(sma20-stddev,4),round(sma20+stddev,4))
 print("2SD Bands:",round(sma20-stddev*2,4),round(sma20+stddev*2,4))
+
+min10 = round(min(y_values[-10:]),4)
 print("\nStops:",round(min10,4),round(min10-stddev*1,4),round(min10-stddev*2,4))
 

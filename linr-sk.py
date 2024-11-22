@@ -1,11 +1,8 @@
 #!/usr/bin/python3
+
 import numpy as np # create dummy data for training
 import sys
 import os 
-
-# The index scaler as calculated on 02/01/2021 via the index-scaler.py code
-# Recalculated 9/30/2024 scaled to 2 base units.
-index_scaler = {'BTC': 1.7254349821590024e-06, 'ETH': 4.248990864669641e-05, 'DOGE': 0.5079365079365079, 'FET': 0.7032348804500703, 'ICP': 0.011921793037672867, 'LTC': 0.0016315875346712351, 'QNT': 0.0014922255051183335, 'SOL': 0.0007113387395077536, 'GRT': 0.6032025228342315}
 
 
 def parse_arguments():
@@ -107,9 +104,9 @@ if currency == 'INDEX':
                     divisor = line[underlying] # Divide by the underlying asset
 
 		# Inner loop, do the indexing math across the values of the dictionary.
-                for key in index_scaler:
+                for key in cm.index_scaler:
                         #print(price_dict[key+" Price"]*new_dict[key]) # Debug
-                        index_value += line[key]*index_scaler[key]
+                        index_value += line[key]*cm.index_scaler[key]
 		# uild a list out of the values.
                 currency_price_list.append(index_value/divisor) 
 else:

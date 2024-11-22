@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 import pandas as pd
 import sys
 
@@ -5,7 +7,7 @@ def find_outliers(asset, file_time_format):
     # Map asset names to CSV column indexes based on your format
     asset_columns = {
         'BTC': 1, 'DOGE': 2, 'ETH': 3, 'FET': 4, 'ICP': 5,
-        'LTC': 6, 'QNT': 7, 'SOL': 8, 'GRT': 9
+        'LTC': 6, 'QNT': 7, 'RNDR': 8, 'SOL': 9, 'GRT': 10
     }
     
     # Ensure valid asset and file format inputs
@@ -16,7 +18,7 @@ def find_outliers(asset, file_time_format):
     # Construct filename from file_time_format
     filename = f"{file_time_format}-prices.csv"
     
-    # Read the CSV file
+    # Read the CSV file in chunks if it's too large (optional)
     try:
         data = pd.read_csv(filename, header=None)
     except FileNotFoundError:
@@ -26,6 +28,11 @@ def find_outliers(asset, file_time_format):
     # Extract the column corresponding to the asset
     asset_col_index = asset_columns[asset]
     prices = data.iloc[:, asset_col_index]
+    
+    # Handle cases where the price might be zero or missing
+    if prices.isnull().any():
+        print(f"Warning: Found missing prices for {asset}.")
+        prices = prices.fillna(method='ffill')  # Forward fill to handle missing values
     
     # Calculate the price deltas (difference between consecutive prices)
     price_deltas = prices.diff().dropna()  # drop the first NaN value caused by diff()
@@ -44,7 +51,14 @@ def find_outliers(asset, file_time_format):
             timestamp = data.iloc[index, 0]  # Get the timestamp from the first column
             previous_price = prices.iloc[index - 1]  # Get the previous price
             current_price = prices.iloc[index]  # Get the current price
+            
+            # Ensure we do not divide by zero for percent change
+            if previous_price == 0:
+                print(f"{timestamp}: Previous price is zero; skipping percent change calculation.")
+                continue
+            
             percent_change = (delta / previous_price) * 100  # Percent change from previous price
+            
             # Print the output with rounded values
             print(f"{timestamp}: Price = {current_price:.5f}, Price Change = {delta:.5f} (Change: {percent_change:.2f}%)")
     else:
@@ -59,4 +73,3 @@ if __name__ == "__main__":
     file_time_format = sys.argv[2].lower()  # Time format (e.g., hourly, four-hour, daily, weekly)
     
     find_outliers(asset, file_time_format)
-

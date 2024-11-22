@@ -17,8 +17,6 @@ this_file = "coretamodule.py"
 
 import csv
 import json
-#from cbpro_buy_sell import cbpro_read_available
-#from cbpro_buy_sell import cbpro_read_holds
 
 ''' Core Technical Analysis Module
     This module contains the core shared functions for the following code.
@@ -31,6 +29,9 @@ import json
     The idea is to centralize a lot of common code, making for better readability and functions that can be updated in one place.
 
 '''
+# The index scaler as calculated on 02/01/2021 via the index-scaler.py code
+# index_scaler Rescaled on 10/18/2024 to a base of 1.
+index_scaler = {'BTC': 1.4802753312116054e-06, 'DOGE': 0.7546828068162951, 'ETH': 3.831094696998721e-05, 'FET': 0.072992700729927, 'ICP': 0.012870012870012873, 'LTC': 0.0013747594171020072, 'QNT': 0.0015424957581366653, 'RNDR': 0.018470870513656437, 'SOL': 0.0006587615283267457, 'GRT': 0.6070023794493274}
 
 
 def rsi(price_list,lookback=14):
@@ -226,8 +227,9 @@ def read_lines_from_csv_file(ticker_filename,volume_rtn=False,extended=False):
                     price_dict["ICP"] = float(row[5])
                     price_dict["LTC"] = float(row[6])
                     price_dict["QNT"] = float(row[7])
-                    price_dict["SOL"] = float(row[8])
-                    price_dict["GRT"] = float(row[9])
+                    price_dict["RNDR"] = float(row[8])
+                    price_dict["SOL"] = float(row[9])
+                    price_dict["GRT"] = float(row[10])
                     
             except ValueError:
                 print('missing data')

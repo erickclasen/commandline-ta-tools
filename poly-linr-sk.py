@@ -1,9 +1,6 @@
-#!/usr/bin/python3
+
 import numpy as np # create dummy data for training
 import sys
-import os 
-import coretamodule as cm
-import statsmod as st
 
 def parse_arguments():
         arguments = len(sys.argv) - 1
@@ -33,15 +30,6 @@ def parse_arguments():
             raise Exception("Invalid options on command line args.")
         return currency,timeframe,subplot
 
-IMAGES_PATH = '/tmp'
-def save_fig(fig_id, tight_layout=True, fig_extension="png", resolution=300):
-    path = os.path.join(IMAGES_PATH, fig_id + "." + fig_extension)
-    print("Saving figure", fig_id)
-    if tight_layout:
-        plt.tight_layout()
-    plt.savefig(path, format=fig_extension, dpi=resolution)
-
-
 # ---------------------- MAIN. -------------------------
 
 underlying = 'USD'
@@ -50,10 +38,9 @@ product_label,timeframe,subplot = parse_arguments()
 #live data
 import coretamodule as cm
 
-ticker_filename_hourly = '/home/erick/python/ta/hourly-prices.csv'
-ticker_filename_4h = '/home/erick/python/ta/four-hour-prices.csv'
-ticker_filename_daily = '/home/erick/python/ta/daily-prices.csv'
-ticker_filename_weekly = '/home/erick/python/ta/weekly-prices.csv'
+ticker_filename_hourly = '/home/erick/www/btc/cbpro_crypto_price_volume_file.csv'
+ticker_filename_daily = '/home/erick/www/btc/cbpro_crypto_price_volume_file_daily.csv'
+ticker_filename_weekly = '/home/erick/www/btc/cbpro_crypto_price_volume_file_weekly.csv'
 
 # Daily or hourly charting.
 if subplot == 'W':
@@ -103,7 +90,6 @@ if currency == 'INDEX':
 
 		# Inner loop, do the indexing math across the values of the dictionary.
                 for key in cm.index_scaler:
-                        #print(price_dict[key]*new_dict[key]) # Debug
                         index_value += line[key]*cm.index_scaler[key]
 		# uild a list out of the values.
                 currency_price_list.append(index_value/divisor) 
@@ -138,11 +124,19 @@ print(y_train)
 y_train = y_train.reshape(-1, 1)
 print(y_train)
 
-# Use sklearn linear regression
-#from sklearn.linear_model import LinearRegression
 
+# Easier to just make these X and Y as the code that was put in here uses X and Y.
+# No special reason for it other than that.
 X = x_train
 Y = y_train
+
+from sklearn import preprocessing
+
+# Use a scaler to normalize the data to -1,1 Stddev 0 
+scaler = preprocessing.StandardScaler().fit(x_train)
+X_scaled = scaler.transform(x_train)
+#X_scaled = X # This is not quite as good as with scaling!
+
 
 # Fudge the tails of the data into shorter lengths for multi regressions.
 X20 = x_train[-20:]
@@ -150,39 +144,64 @@ Y20 = y_train[-20:]
 X50 = x_train[-50:]
 Y50 = y_train[-50:]
 
+from sklearn.preprocessing import PolynomialFeatures
+
+# Do the features for a poly lin r
+# This has the degree for the poly to fit.
+poly_features = PolynomialFeatures(degree=6,include_bias=False)
+
+# Used the scaled X which is normalized.
+X_poly = poly_features.fit_transform(X_scaled)
+
+# HPTUNING
+from sklearn.linear_model import SGDRegressor
+#linear_regressor_SGD = SGDRegressor(max_iter = 1000000,tol=1e-12,penalty='l1',eta0=0.00001)
+linear_regressor_SGD = SGDRegressor(max_iter = 1000000,tol=1e-12,penalty='l1',eta0=0.0001,alpha=0.5,verbose=1)
+
+linear_regressor_SGD.fit(X_poly, Y.ravel())  # perform linear regression
+Y_pred_SGD = linear_regressor_SGD.predict(X_poly)  # make predictions
+
+
+
+from sklearn.linear_model import LinearRegression
+linear_regressor = LinearRegression()
+
 
 # 3x linear regression
 #linear_regressor = LinearRegression()  # create object for the class
-#linear_regressor.fit(X, Y)  # perform linear regression
-#Y_pred = linear_regressor.predict(X)  # make predictions
+# Polynomial fit using regular normal equation
+linear_regressor.fit(X_poly, Y)  # perform linear regression
+Y_pred = linear_regressor.predict(X_poly)  # make predictions
 
-#linear_regressor.fit(X20, Y20)  # perform linear regression
-#Y_pred20 = linear_regressor.predict(X20)  # make predictions
+
+# Use sklearn linear regression non poly, regular fit using normal eqn type of math.
+linear_regressor.fit(X, Y)  # perform linear regression
+Y_pred_Lin = linear_regressor.predict(X)  # make predictions
 
 
 #linear_regressor.fit(X50, Y50)  # perform linear regression
 #Y_pred50 = linear_regressor.predict(X50)  # make predictions
 
 # Plotting
-#import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 #plt.scatter(X, Y)
 #plt.plot(X, Y_pred, color='red')
 #plt.show()
 
 
-#plt.clf()
+plt.clf()
 
 # Axes
-#plt.title(currency+"-"+underlying+" "+subplot+"'ly Linear Regression Plot", color='black')
-#plt.xlabel(subplot+"'ly Timeframe", color="black", fontsize=20)
-#plt.ylabel('Price', color="black", fontsize=20)
+plt.title(currency+"-"+underlying+" "+subplot+"'ly Linear Regression Plot", color='black')
+plt.xlabel(subplot+"'ly Timeframe", color="black", fontsize=20)
+plt.ylabel('Price', color="black", fontsize=20)
 
 #plt.plot(x_train, y_train, 'go', label='True data', alpha=0.5)
-#plt.plot(x_train, y_train, '-', label='True data', alpha=0.75,linewidth=1.95)
+plt.plot(x_train, y_train, '-', label='True data', alpha=0.75,linewidth=1.95)
 
-#plt.plot(X, Y_pred, '--', label='Predictions '+str(timeframe), alpha=0.5,linewidth=2.5)
-#plt.plot(X20, Y_pred20, '--', label='Predictions 20', alpha=0.5,linewidth=1.95,color="red")
-#plt.plot(X50, Y_pred50, '--', label='Predictions 50', alpha=0.5,linewidth=1.95,color="violet")
+plt.plot(X, Y_pred, '--', label='Predictions 1st Ord Lin'+str(timeframe), alpha=0.5,linewidth=2.5)
+plt.plot(X, Y_pred_Lin, '--', label='Predictions Lin Normal-Eqn', alpha=0.5,linewidth=1.95,color="red")
+plt.plot(X, Y_pred_SGD, '--', label='Predictions SGD', alpha=0.5,linewidth=2.95,color="blue")
 #plt.plot([min(X),max(X)],[max(Y[:5]),max(Y[-5:])],label="X")
 
 # ------ FRACTALS -----------
@@ -201,11 +220,11 @@ for price in y_values:
 		# Find Down Fractals using if logic.
                 if dp[3] > dp[2] and dp[2] > dp[1] and dp[1] < dp[0] and dp[0] < price:
                         print("Down: ",count-1,"\t\t",dp[1]) 
-                        #plt.scatter(count-2,dp[1])
+                        plt.scatter(count-2,dp[1])
 	        # Find Up fractals using if logic.	
                 if dp[3] < dp[2] and dp[2] < dp[1] and dp[1] > dp[0] and dp[0] < price:
                         print("Up: ",count-1,dp[1]) 
-                        #plt.scatter(count-2,dp[1])
+                        plt.scatter(count-2,dp[1])
 
 
         # Save historic data by propigating the data forward in time
@@ -214,24 +233,8 @@ for price in y_values:
         dp[0] = price # Current price always goes at the zero/now point.
         count+=1 # Keep track of the position in history.
 
-# Save and plot the figure.
-#plt.legend(loc='best')
-#save_fig(currency+"-"+underlying+"-price-linr")
-#plt.show()
 
+plt.legend(loc='best')
+plt.show()
 
-min10 = round(min(y_values[-10:]),4)
-print("\nMin10",min10)
-print("Max60",round(max(y_values[-60:]),4))
-# add mean of these
-
-sma5 = cm.simple_mov_avg(y_values,5)
-sma20 = cm.simple_mov_avg(y_values,20)
-
-stddev = st.stddev(y_values[-20:])
-
-print("\nSMA5 and SMA20:",round(sma5,4),round(sma20,4))
-print("1SD Bands:",round(sma20-stddev,4),round(sma20+stddev,4))
-print("2SD Bands:",round(sma20-stddev*2,4),round(sma20+stddev*2,4))
-print("\nStops:",round(min10,4),round(min10-stddev*1,4),round(min10-stddev*2,4))
 

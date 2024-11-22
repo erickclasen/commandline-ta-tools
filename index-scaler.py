@@ -5,8 +5,8 @@ from collections import OrderedDict
 
 # Revised when the CB Pro API stopped in 9/2024.
 price_dict = OrderedDict()
-price_dict = {'BTC': 64396,  'ETH': 2615, 'DOGE': 0.21875, 'FET': 0.158, 'ICP': 9.32, 'LTC': 68.1, 'QNT': 74.46,'SOL': 156.2, 'GRT':0.184202}
-
+#price_dict = {'BTC': 64396,  'ETH': 2615, 'DOGE': 0.21875, 'FET': 0.158, 'ICP': 9.32, 'LTC': 68.1, 'QNT': 74.46,'SOL': 156.2, 'GRT':0.184202}
+price_dict = {'BTC': 67555.0, 'DOGE': 0.132506, 'ETH': 2610.22, 'FET': 1.37, 'ICP': 7.77, 'LTC': 72.74, 'QNT': 64.83, 'RNDR': 5.41393, 'SOL': 151.8, 'GRT': 0.164744}
 
 
 # How long is the dict ?
