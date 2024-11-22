@@ -722,3 +722,5 @@ Initially used on a RaspberryPI that was running Python and keeping the code lig
 This module is intended to be imported and used by other scripts in the directory for statistical analysis of financial time series data.
 ## Notes
 I tend to use candles.py, run.py, rsi-fractals-avgs-bbands-txt-summary.py, linr-sk-fractals.py and buy-zone.py mostly. The other files can be legacy or they were early builds.
+
+Let me know if any of the descriptions are missing or do not line up right with the code as I might have missed something along the way as I worked though this fairly quickly.
