@@ -19,6 +19,7 @@ When there is enough data the code will run by using the *-prices.csv files
 For example buy-zone.py will use weekly only, others will use other timeframes and options.
 
 The CSV files contain 9 currencies: 'BTC': 1, 'DOGE': 2, 'ETH': 3, 'FET': 4, 'ICP': 5,'LTC': 6, 'QNT': 7, 'SOL': 8, 'GRT': 9
+NOTE: NOW updated to 10, RNDR was added in 11/2024 during a refactoring and debugging pass on the second commit of this code.
 I picked these based on what I was interested in at the time when I created this code out of the old Coinbase PRO API Code.... https://github.com/erickclasen/cbpro-cli-tools
 
 ### Index
