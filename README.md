@@ -38,7 +38,7 @@ The script offers flexibility with daily or weekly price charts (when available)
 From the command line, the script accepts arguments for currency, timeframe, and chart type:
 
 ```bash
-python3 script.py <currency> <timeframe> <chart_type>
+python3 buy-zone.py <currency> <timeframe> <chart_type>
 ```
 
 - `<currency>`: The cryptocurrency symbol, e.g., BTC, ETH.
@@ -50,8 +50,9 @@ python3 script.py <currency> <timeframe> <chart_type>
 To run an analysis for Bitcoin over a 208-week timeframe using weekly data:
 
 ```bash
-python3 script.py BTC 208 W
+python3 buy-zone.py BTC 208 W
 ```
+![Example of buy-zone.py output at command line](images/buy-zone-cl-dump-btc.png)
 ## candles.py
 This Python script is designed to perform technical analysis on cryptocurrency data using various financial indicators such as RSI (Relative Strength Index), ROC (Rate of Change), and OBV (On-Balance Volume). It allows for flexible input through command-line arguments, enabling users to specify the cryptocurrency, time frame, and desired indicator.
 
@@ -625,6 +626,7 @@ python poly-linr-sk.py BTC 50 H
   - Identified fractals for potential buy/sell signals.
 
 Make sure the required CSV files containing the price data are accessible at the specified paths in the script.
+![Example of output when any of the outliers price series of Python code is run](images/outliers-price-moves-output.png)
 
 ## rsi-fractals-avgs-bbands-txt-summary.py
 
