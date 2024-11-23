@@ -69,7 +69,7 @@ You can run this script from the command line to perform technical analysis on c
 #### Command Syntax
 
 ```bash
-python3 script.py <currency> <timeframe> <indicator>
+python3 candles.py <currency> <timeframe> <indicator>
 ```
 
 #### Arguments
@@ -99,7 +99,7 @@ python3 script.py <currency> <timeframe> <indicator>
    To analyze Bitcoin (`BTC`) over the past 365 days and plot the RSI indicator:
 
    ```bash
-   python3 script.py BTC 365 RSI
+   python3 candles.py BTC 365 RSI
    ```
 
 2. **Specify a Different Timeframe with ROC Indicator**
@@ -107,7 +107,7 @@ python3 script.py <currency> <timeframe> <indicator>
    To analyze Ethereum (`ETH`) over the past 730 days and plot the ROC indicator:
 
    ```bash
-   python3 script.py ETH 730 ROC
+   python3 candles.py ETH 730 ROC
    ```
 
 3. **Generate Statistics Without Plotting Indicators**
@@ -115,7 +115,7 @@ python3 script.py <currency> <timeframe> <indicator>
    To generate statistical data for Litecoin (`LTC`) over the past 500 days without plotting any technical indicators:
 
    ```bash
-   python3 script.py LTC 500 STATS
+   python3 candles.py LTC 500 STATS
    ```
 
 #### Detailed Steps
@@ -159,7 +159,7 @@ python3 script.py <currency> <timeframe> <indicator>
 2. **Run the Script:**
 
    ```bash
-   python3 script.py BTC 365 RSI
+   python3 candles.py BTC 365 RSI
    ```
 
 3. **Analyze the Output:**
@@ -169,6 +169,7 @@ python3 script.py <currency> <timeframe> <indicator>
    - If `STATS` was used, review the appended `stats.csv` for historical analysis.
 
 This script provides a comprehensive tool for cryptocurrency traders and analysts to perform technical analysis, visualize trends, and make informed trading decisions based on historical data and key financial indicators.
+![BTC Example Chart](images/BTC-Candles-11232024.png)
 
 ## cg-current-prices.py
 
@@ -453,8 +454,8 @@ The script is designed for financial data analysis and visualization, specifical
 
 This script integrates data analysis and visualization to assist users in understanding cryptocurrency price trends and making informed decisions.
 
-
-
+![Example Linear Regression Plot](images/FET-USD-price-linr.png)
+![Example Linear Regression Plot](images/QNT-USD-price-linr.png)
 ## outliers-play-sounds.py
 
 ### Summary
@@ -671,6 +672,7 @@ The output is written to a CSV file named `output-rsi-er-price-sma20-multiple.cs
 - Volatility metrics
 
 This script is useful for traders and analysts who want to monitor cryptocurrency price movements and make informed trading decisions based on technical analysis.
+![Example RSI and Fractals CL Dump](images/rsi-fractals-output-BTC.png)
 
 ## run.py, which utilizes functions from `ichimoku.py`
 
